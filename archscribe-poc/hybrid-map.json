@@ -1,0 +1,11 @@
+{
+  "concept_steps": ["struct-3", "struct-4"],
+  "phases": [
+    {"id": "task", "web_steps": ["boot-1"]},
+    {"id": "select", "web_steps": ["disc-1", "struct-2", "disc-2"]},
+    {"id": "load", "web_steps": ["load-1", "load-2"]},
+    {"id": "act", "web_steps": ["exec-1"]},
+    {"id": "observe", "web_steps": ["observe-1"]},
+    {"id": "verify", "web_steps": ["exec-2", "recap"]}
+  ]
+}

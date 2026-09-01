@@ -1,0 +1,31 @@
+{
+  "layout": "graph",
+  "direction": "down",
+  "style": "default",
+  "animation": "failure-recovery",
+  "density": "airy",
+  "aspect_ratio": "landscape",
+  "motion_level": "cinematic",
+  "title": {
+    "prefix": "SKILL RUNTIME",
+    "highlight": "Skill 运行闭环",
+    "subtitle": "从任务触发到质量验证：一次可复用能力的完整闭环"
+  },
+  "signature": "@hch.hub",
+  "nodes": [
+    {"id": "task", "label": "任务进入", "body": "用户意图 / 高优先级指令", "icon": "user", "kind": "card", "accent": "cyan"},
+    {"id": "select", "label": "发现并选择", "body": "目录 + description：显式或语义命中", "icon": "compare", "kind": "decision", "accent": "amber"},
+    {"id": "load", "label": "加载说明与资源", "body": "SKILL.md + 按需展开 scripts / refs", "icon": "package", "kind": "card", "accent": "cyan"},
+    {"id": "act", "label": "调用工具", "body": "按步骤执行真实操作", "icon": "tool-call", "kind": "card", "accent": "amber"},
+    {"id": "observe", "label": "观察结果", "body": "输出成为下一轮判断输入", "icon": "eye", "kind": "card", "accent": "cyan"},
+    {"id": "verify", "label": "验证交付", "body": "通过则交付，失败则回环", "icon": "evaluation", "kind": "decision", "accent": "green"}
+  ],
+  "edges": [
+    {"from": "task", "to": "select", "label": "host 暴露候选"},
+    {"from": "select", "to": "load", "label": "命中"},
+    {"from": "load", "to": "act", "label": "开始执行"},
+    {"from": "act", "to": "observe", "label": "工具输出"},
+    {"from": "observe", "to": "verify", "label": "质量检查"},
+    {"from": "verify", "to": "load", "kind": "loop", "label": "未通过：继续判断"}
+  ]
+}
