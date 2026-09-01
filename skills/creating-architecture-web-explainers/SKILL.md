@@ -9,9 +9,19 @@ description: Use when turning a technical stack, system architecture, lifecycle,
 
 先建立可解释的内容模型，再选择视觉和交互。目标是让读者能回答“系统如何运作、为什么这样设计、边界在哪里”，而不是把架构图换成装饰性网页。
 
-## Frame the brief
+## Frame the brief & Choose the diagram type
 
 先确认受众、要回答的核心问题、部署场景，以及现有品牌或页面约束；已知信息不重复追问。对任何机制或生命周期，按此顺序建模：先写谁或什么启动它、能力如何变得可发现；再写每个阶段进入下一阶段的转换条件、触发事件或判断；最后写由此产生的状态变化。梳理内容时读取 [content model](references/content-model.md)：把原始材料归入概念、关系、流程、权衡、结论五类，并以证据标注不确定处。
+
+根据技术目标选择对应的标准化图表与解释器类型：
+
+| 类型 (Type) | 最佳适用场景 | 关键呈现要素 |
+| --- | --- | --- |
+| **Architecture (系统架构)** | 微服务、服务网格、基础设施拓扑、多云部署 | 服务边界、协议、存储、负载均衡、外部依赖与信任边界 |
+| **Workflow (工作流 / 协作)** | CI/CD 流水线、Agent 任务执行、审批流、故障应急 Runbook | 参与角色、判断分支、工具调用、失败回退与重试回路 |
+| **Sequence (时序 / 调用链)** | API 请求全链路、缓存命中/回源、分布式鉴权、消息发布订阅 | 调用方与被调用方、请求/响应时序、异步解耦点、超时处理 |
+| **Data Flow (数据流转 / 工程)** | 大数据数仓 ETL/ELT、流式计算、实时数仓、数据血缘与 PII 隔离 | 数据来源、转换算子、分层存储 (ODS/DWD/DWS/ADS)、下游消费 |
+| **Lifecycle (生命周期 / 状态机)** | Agent Skill 发现与执行、资源生命周期、订单/事务状态跃迁 | 启动事件、状态跃迁矩阵、按需资源加载、质量门槛与终态 |
 
 以 Skill 为例：host 先向模型提供已安装 Skill 的 `name`、`description`、`path` 轻量列表；用户可用 `@`/`$` 显式点名，或由任务语义与 `description` 匹配而隐式选择，选中后才读取完整 `SKILL.md`。不要表述为 Skill 自己持续扫描，也不要笼统归因于 system prompt。
 
@@ -21,9 +31,9 @@ description: Use when turning a technical stack, system architecture, lifecycle,
 
 | 模式 | 何时选择 | 主要职责 |
 | --- | --- | --- |
-| Web only | 重点是概念、比较、长文解释或逐步教学 | 页面承担完整叙事与交互 |
-| Archscribe only | 重点是全局拓扑、分支、回环、演示动画或可编辑交付 | 图承担结构与路径说明 |
-| Hybrid | 同时需要“先看全貌”与“逐步理解”，或既要 HCH.HUB 展示又要可编辑架构图 | Archscribe 提供总览，Web 提供解释与深挖 |
+| **Web only** | 重点是概念、比较、长文解释或逐步教学 | 页面承担完整叙事与交互 |
+| **Archscribe only** | 重点是全局拓扑、分支、回环、演示动画或可编辑交付 | 图承担结构与路径说明 |
+| **Hybrid** | 同时需要“先看全貌”与“逐步理解”，或既要 HCH.HUB 展示又要可编辑架构图 | Archscribe 提供总览，Web 提供解释与深挖 |
 
 Hybrid 模式必须先建立一份共享内容模型，再派生图和页面；读取 [Archscribe integration](references/archscribe-integration.md)。两边复用稳定阶段 ID、中文术语、顺序和回环含义，禁止各自维护一套流程。
 
@@ -31,11 +41,24 @@ Hybrid 模式必须先建立一份共享内容模型，再派生图和页面；�
 
 流程节点必须是读者可独立理解的完整语义阶段，不是视觉分页。一个节点应有输入、状态变化和输出；仅装饰不同的步骤合并。
 
-- 1–3 个完整节点：使用正常纵向滚动。
-- 4 个及以上完整节点：使用横向 Slide；一次只呈现一个阶段。
-- 其他章节保持纵向滚动，避免将整页强行变成轮播。
+- **1–3 个完整节点**：使用正常纵向滚动。
+- **4 个及以上完整节点**：使用横向 Slide；一次只呈现一个阶段。
+- **其他章节保持纵向滚动**，避免将整页强行变成轮播。
 
 横向 Slide 必须提供右下角导航，默认约 60% 不透明度，`hover`/`focus` 为 100%；同时提供当前页/总页码、上一页与下一页按钮、左右方向键和触控滑动。首尾按钮禁用并有明确状态。不要为凑页数机械拆分节点。
+
+## Advanced interactions & Presets (进阶交互与预设)
+
+在标准展示基础上，可根据用户场景按需启用进阶探索能力：
+1. **Route Probe (路径探查)**：支持聚焦并高亮两个节点之间的最短有向路径，展示协议、耗时与上下文；
+2. **Reach Analysis (可达性分析)**：支持上游依赖 (Upstream) 与下游影响 (Downstream) 范围高亮，不凭空捏造链路；
+3. **Story / Chapter Play (章节故事播放)**：内置典型业务场景（如 Normal Path 正常流程 vs Fallback Path 降级容灾）的自动步进播放；
+4. **Visual Presets (视觉风格预设)**：
+   - `Cyber / HCH`（默认）：深海军蓝 `#05091A`、高亮青 `#00CFFF` 与冷白文字，沉浸科技感；
+   - `Signal Flow`：强化粒子流动与管道流向，适合数据工程与调用链路；
+   - `Blueprint`：蓝图工程网格风格，适合基础设施与物理拓扑；
+   - `Classic`：高对比极简线条，适合正式汇报与纸质/PDF 打印。
+5. **Export & Share Cards (标准分享卡片)**：支持导出高质量 PNG、SVG 以及 1200×630 标准社交/README 分享卡片（Canonical Share Card / Route Share Card）。
 
 ## Build
 
